@@ -3,8 +3,20 @@ console.log('Flappy Bird - Dener')
 const sprites = new Image()
 sprites.src = './src/images/sprites.png'
 
+const somde_HIT = new Audio('./src/effects/efeitos_hit.wav')
+
 const canvas = document.querySelector('canvas')
 const contexto = canvas.getContext('2d')
+
+const verificaColisão = (item1, item2) =>{
+    const fator1 = item1.positionY + item1.altura
+    const fator2 = item2.positionY
+
+    if (fator1 >= fator2){
+        return true
+    }
+    return false
+}
 
 const TelaInicio = {
     spriteX: 134,
@@ -34,8 +46,16 @@ const FlappyBird = {
     positionY: 50,
     velocidade: 0,
     gravidade: 0.25,
+    pulo: 4.6,
     
     atualiza(){
+        if (verificaColisão(this, Chao)){
+            somde_HIT.play()
+            setTimeout(() => {
+                mudaTela(Telas.INICIO)
+            }, 0.5*1000);
+            return
+        }
         this.velocidade += this.gravidade
         this.positionY += this.velocidade
     },
@@ -48,6 +68,10 @@ const FlappyBird = {
             this.positionX, this.positionY,
             this.largura, this.altura
         )
+    },
+
+    pula(){
+        this.velocidade = - this.pulo
     }
 }
 
@@ -117,6 +141,8 @@ const Telas = {
         desenha(){
             Fundo.desenha()
             Chao.desenha()
+            FlappyBird.positionY = 50
+            FlappyBird.velocidade = 0
             FlappyBird.desenha()
             TelaInicio.desenha()
         },
@@ -124,8 +150,7 @@ const Telas = {
 
         },
         click(){
-            // mudaTela(Telas.INGAME)
-            console.log(this)
+            mudaTela(Telas.INGAME)
         }
     },
     INGAME:{
@@ -137,6 +162,9 @@ const Telas = {
         atualiza(){
             FlappyBird.atualiza()
 
+        },
+        click(){
+            FlappyBird.pula()
         }
     }
 }
@@ -148,7 +176,7 @@ function loop(){
     requestAnimationFrame(loop)
 }
 
-window.addEventListener('click', function(){
+window.addEventListener('mousedown', function(){
     if (telaAtiva.click){
         telaAtiva.click()
     }
