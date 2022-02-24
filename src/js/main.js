@@ -6,6 +6,25 @@ sprites.src = './src/images/sprites.png'
 const canvas = document.querySelector('canvas')
 const contexto = canvas.getContext('2d')
 
+const TelaInicio = {
+    spriteX: 134,
+    spriteY: 0,
+    largura: 174,
+    altura: 152,
+    positionX: (canvas.width / 2) - (174 /2) ,
+    positionY: 50,
+
+    desenha(){
+        contexto.drawImage(
+            sprites,
+            this.spriteX, this.spriteY,
+            this.largura, this.altura,
+            this.positionX, this.positionY,
+            this.largura, this.altura
+        )
+    }    
+}
+
 const FlappyBird = {
     spriteX: 0,
     spriteY: 0,
@@ -86,15 +105,54 @@ const Fundo = {
     }    
 }
 
+//
+//[Telas]
+//
+let telaAtiva = {}
+function mudaTela(novaTela){
+    telaAtiva = novaTela
+}
+const Telas = {
+    INICIO:{
+        desenha(){
+            Fundo.desenha()
+            Chao.desenha()
+            FlappyBird.desenha()
+            TelaInicio.desenha()
+        },
+        atualiza(){
+
+        },
+        click(){
+            // mudaTela(Telas.INGAME)
+            console.log(this)
+        }
+    },
+    INGAME:{
+        desenha(){
+            Fundo.desenha()
+            Chao.desenha()
+            FlappyBird.desenha()
+        },
+        atualiza(){
+            FlappyBird.atualiza()
+
+        }
+    }
+}
+// Fim de telas
+
 function loop(){
-    FlappyBird.atualiza()
-
-    Fundo.desenha()
-    Chao.desenha()
-    FlappyBird.desenha()
-
-
+    telaAtiva.atualiza()
+    telaAtiva.desenha()
     requestAnimationFrame(loop)
 }
 
+window.addEventListener('click', function(){
+    if (telaAtiva.click){
+        telaAtiva.click()
+    }
+})
+
+mudaTela(Telas.INICIO)
 loop()
