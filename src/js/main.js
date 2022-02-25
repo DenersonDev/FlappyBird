@@ -48,7 +48,7 @@ const FlappyBird = {
     positionY: 50,
     velocidade: 0,
     gravidade: 0.25,
-    pulo: 4.5,
+    pulo: 4,
     frameatual: 0,
     
     atualiza(){
@@ -161,7 +161,7 @@ const Canos={
         spriteX: 52,
         spriteY: 169
     },
-    espaco: 90,
+    espaco: 100,
     pares: [],
 
     desenha(){
@@ -284,7 +284,7 @@ function loop(){
     requestAnimationFrame(loop)
 }
 
-window.addEventListener('mousedown', function(){
+window.addEventListener('click', function(){
     if (telaAtiva.click){
         telaAtiva.click()
     }
